@@ -24,3 +24,7 @@ nltk>=3.8
 
 # Additional Utilities
 tqdm>=4.64.0
+
+# Web Framework
+flask>=2.0.0
+flask-cors>=3.0.0

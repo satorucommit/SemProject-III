@@ -25,8 +25,9 @@ echo.
 echo 💡 TO USE THE VIRTUAL ENVIRONMENT:
 echo    1. Activate:   nasa_patent_env\Scripts\activate.bat
 echo    2. Run app:    python main.py
-echo    3. Run demo:   python simple_demo.py  
-echo    4. Deactivate: deactivate
+echo    3. Run demo:   python simple_demo.py
+echo    4. Run API:    python app.py
+echo    5. Deactivate: deactivate
 echo.
 echo 🎉 Setup complete! Your environment is ready.
 pause

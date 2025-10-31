@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NASA Patent Forecasting System</title>
+    <style>
+        :root {
+            --primary-color: #0b3d91;
+            --secondary-color: #fc3d21;
+            --accent-color: #00bfff;
+            --light-color: #f5f5f5;
+            --dark-color: #333;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --error-color: #dc3545;
+            --info-color: #17a2b8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: var(--light-color);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #1a4ca1);
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-title {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-color);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus, input[type="text"]:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        button {
+            background: linear-gradient(135deg, var(--primary-color), #1a4ca1);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:hover {
+            background: linear-gradient(135deg, #1a4ca1, var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #5a6268, #6c757d);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #218838);
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(135deg, #218838, var(--success-color));
+        }
+        
+        .status-message {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .status-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .result-container {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--accent-color);
+            padding: 20px;
+            border-radius: 0 5px 5px 0;
+            margin: 20px 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #e9ecef;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .status-active {
+            background-color: var(--success-color);
+        }
+        
+        .status-inactive {
+            background-color: var(--error-color);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            color: #6c757d;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        /* Enhanced result styling */
+        .evaluation-result {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-top: 20px;
+        }
+        
+        .result-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .result-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .result-title {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-color);
+        }
+        
+        .result-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--info-color);
+        }
+        
+        .result-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 5px;
+        }
+        
+        .result-value {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+        
+        .recommendation-box {
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 20px 0;
+        }
+        
+        .recommendation-highly {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .recommendation-recommended {
+            background-color: #cce7ff;
+            color: #004085;
+            border: 1px solid #b8daff;
+        }
+        
+        .recommendation-caution {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .recommendation-neutral {
+            background-color: #e2e3e5;
+            color: #383d41;
+            border: 1px solid #d6d8db;
+        }
+        
+        .recommendation-not {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .topic-keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .keyword-tag {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .growth-indicator {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .growth-high {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .growth-moderate {
+            background-color: var(--warning-color);
+            color: #212529;
+        }
+        
+        .growth-low {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .growth-declining {
+            background-color: var(--error-color);
+            color: white;
+        }
+        
+        .forecast-chart {
+            height: 200px;
+            margin: 20px 0;
+            position: relative;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🚀 NASA Patent Forecasting System</h1>
+            <p class="subtitle">Analyze technology trends and evaluate patent ideas</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <h2 class="card-title">System Status</h2>
+            <div class="system-status">
+                <span class="status-indicator" id="statusIndicator"></span>
+                <span id="statusText">Checking system status...</span>
+            </div>
+            <button id="initButton" class="btn-secondary">Initialize System</button>
+            <div id="initMessage" class="status-message hidden"></div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title">Evaluate Patent Idea</h2>
+            <div class="form-group">
+                <label for="patentIdea">Enter your patent idea:</label>
+                <textarea id="patentIdea" placeholder="Describe your patent idea here... For example: Advanced solar panel technology for spacecraft"></textarea>
+            </div>
+            <button id="evaluateButton" disabled>Evaluate Idea</button>
+            <div id="evaluateMessage" class="status-message hidden"></div>
+            <div id="evaluationResult" class="evaluation-result hidden"></div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title">How to Use</h2>
+            <ol>
+                <li><strong>Initialize System</strong>: Click the "Initialize System" button to load and process the NASA patent data.</li>
+                <li><strong>Enter Patent Idea</strong>: Describe your patent idea in the text area.</li>
+                <li><strong>Evaluate</strong>: Click "Evaluate Idea" to analyze your idea against technology trends.</li>
+                <li><strong>Review Results</strong>: The system will classify your idea into a technology topic and provide a trend analysis.</li>
+            </ol>
+            <p><strong>Tip</strong>: Be as specific as possible when describing your patent idea for better analysis.</p>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>NASA Patent Forecasting System &copy; 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        // API base URL
+        const BASE_URL = 'http://127.0.0.1:5000';
+        
+        // DOM elements
+        const statusIndicator = document.getElementById('statusIndicator');
+        const statusText = document.getElementById('statusText');
+        const initButton = document.getElementById('initButton');
+        const initMessage = document.getElementById('initMessage');
+        const patentIdea = document.getElementById('patentIdea');
+        const evaluateButton = document.getElementById('evaluateButton');
+        const evaluateMessage = document.getElementById('evaluateMessage');
+        const evaluationResult = document.getElementById('evaluationResult');
+        
+        // Check system status on page load
+        window.addEventListener('DOMContentLoaded', checkSystemStatus);
+        
+        // Initialize system
+        initButton.addEventListener('click', initializeSystem);
+        
+        // Evaluate patent idea
+        evaluateButton.addEventListener('click', evaluateIdea);
+        
+        // Check system status
+        async function checkSystemStatus() {
+            try {
+                const response = await fetch(`${BASE_URL}/api/status`);
+                const data = await response.json();
+                
+                if (data.initialized) {
+                    statusIndicator.className = 'status-indicator status-active';
+                    statusText.textContent = 'System is ready for use';
+                    initButton.disabled = true;
+                    initButton.textContent = 'System Initialized';
+                    initButton.className = 'btn-success';
+                    evaluateButton.disabled = false;
+                } else {
+                    statusIndicator.className = 'status-indicator status-inactive';
+                    statusText.textContent = 'System needs initialization';
+                    initButton.disabled = false;
+                    evaluateButton.disabled = true;
+                }
+            } catch (error) {
+                statusIndicator.className = 'status-indicator status-inactive';
+                statusText.textContent = 'System unavailable';
+                initButton.disabled = true;
+                evaluateButton.disabled = true;
+                showMessage(initMessage, `Error: ${error.message}`, 'error');
+            }
+        }
+        
+        // Initialize system
+        async function initializeSystem() {
+            try {
+                initButton.disabled = true;
+                initButton.textContent = 'Initializing...';
+                showMessage(initMessage, 'Initializing system... This may take a moment.', 'info');
+                
+                const response = await fetch(`${BASE_URL}/api/initialize`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showMessage(initMessage, `System initialized successfully! Processed ${data.num_patents} patents and discovered ${data.num_topics} technology topics.`, 'success');
+                    statusIndicator.className = 'status-indicator status-active';
+                    statusText.textContent = 'System is ready for use';
+                    initButton.textContent = 'System Initialized';
+                    initButton.className = 'btn-success';
+                    evaluateButton.disabled = false;
+                } else {
+                    showMessage(initMessage, `Initialization failed: ${data.message}`, 'error');
+                    initButton.disabled = false;
+                    initButton.textContent = 'Initialize System';
+                    initButton.className = 'btn-secondary';
+                }
+            } catch (error) {
+                showMessage(initMessage, `Error: ${error.message}`, 'error');
+                initButton.disabled = false;
+                initButton.textContent = 'Initialize System';
+                initButton.className = 'btn-secondary';
+            }
+        }
+        
+        // Evaluate patent idea
+        async function evaluateIdea() {
+            const idea = patentIdea.value.trim();
+            
+            if (!idea) {
+                showMessage(evaluateMessage, 'Please enter a patent idea', 'error');
+                return;
+            }
+            
+            if (idea.length < 10) {
+                showMessage(evaluateMessage, 'Please provide a more detailed description (at least 10 characters)', 'error');
+                return;
+            }
+            
+            try {
+                evaluateButton.disabled = true;
+                evaluateButton.textContent = 'Evaluating...';
+                showMessage(evaluateMessage, 'Analyzing your patent idea... This may take a moment.', 'info');
+                evaluationResult.classList.add('hidden');
+                
+                const response = await fetch(`${BASE_URL}/api/evaluate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({idea: idea})
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showMessage(evaluateMessage, 'Analysis completed successfully!', 'success');
+                    displayEvaluationResult(data.evaluation, idea);
+                    evaluationResult.classList.remove('hidden');
+                } else {
+                    showMessage(evaluateMessage, `Evaluation failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showMessage(evaluateMessage, `Error: ${error.message}`, 'error');
+            } finally {
+                evaluateButton.disabled = false;
+                evaluateButton.textContent = 'Evaluate Idea';
+            }
+        }
+        
+        // Display evaluation result in a structured format
+        function displayEvaluationResult(evaluationText, ideaText) {
+            // In the updated version, we'll use the parsed result data
+            // But for now, we'll keep the existing parsing logic as a fallback
+            parseAndDisplayResult(evaluationText, ideaText);
+        }
+        
+        // Parse and display result using structured data
+        function parseAndDisplayResult(evaluationText, ideaText) {
+            // Parse the evaluation text to extract key information
+            const lines = evaluationText.split('\n');
+            
+            // Extract key information
+            let topicClassification = '';
+            let confidenceLevel = '';
+            let trendClassification = '';
+            let growthRate = '';
+            let recommendation = '';
+            let explanation = '';
+            let keywords = [];
+            let forecastData = [];
+            
+            // Parse the evaluation text
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                
+                if (line.includes('Predicted Topic:')) {
+                    topicClassification = line.split(':')[1].trim();
+                } else if (line.includes('Classification Confidence:')) {
+                    confidenceLevel = line.split(':')[1].trim();
+                } else if (line.includes('Trend Classification:')) {
+                    trendClassification = line.split(':')[1].trim();
+                } else if (line.includes('Growth Rate:')) {
+                    growthRate = line.split(':')[1].trim();
+                } else if (line.includes('Status:')) {
+                    recommendation = line.split(':')[1].trim();
+                } else if (line.includes('Explanation:')) {
+                    explanation = line.split(':')[1].trim();
+                } else if (line.includes('Keywords:')) {
+                    // Extract keywords from the line
+                    const keywordMatch = line.match(/Keywords: (.+)/);
+                    if (keywordMatch) {
+                        keywords = keywordMatch[1].split(',').map(k => k.trim());
+                    }
+                }
+            }
+            
+            // Create HTML for the result display
+            let resultHTML = `
+                <div class="result-section">
+                    <h3 class="result-title">Patent Idea Analysis</h3>
+                    <div class="result-item">
+                        <div class="result-label">Patent Idea:</div>
+                        <div class="result-value">${ideaText}</div>
+                    </div>
+                </div>
+                
+                <div class="result-section">
+                    <h3 class="result-title">Topic Classification</h3>
+                    <div class="result-item">
+                        <div class="result-label">Predicted Topic:</div>
+                        <div class="result-value">${topicClassification} 
+                            ${getGrowthIndicator(trendClassification)}
+                        </div>
+                        ${keywords.length > 0 ? `
+                            <div class="result-label">Topic Keywords:</div>
+                            <div class="topic-keywords">
+                                ${keywords.slice(0, 10).map(keyword => `<span class="keyword-tag">${keyword}</span>`).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Confidence Level:</div>
+                        <div class="result-value">${confidenceLevel}</div>
+                    </div>
+                </div>
+                
+                <div class="result-section">
+                    <h3 class="result-title">Trend Analysis</h3>
+                    <div class="result-item">
+                        <div class="result-label">Trend Classification:</div>
+                        <div class="result-value">${trendClassification}</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Growth Rate:</div>
+                        <div class="result-value">${growthRate}</div>
+                    </div>
+                </div>
+                
+                <div class="result-section">
+                    <h3 class="result-title">Recommendation</h3>
+                    <div class="recommendation-box recommendation-${getRecommendationClass(recommendation)}">
+                        ${recommendation}
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Explanation:</div>
+                        <div>${explanation}</div>
+                    </div>
+                </div>
+            `;
+            
+            evaluationResult.innerHTML = resultHTML;
+        }
+        
+        // Get growth indicator based on trend classification
+        function getGrowthIndicator(trendClassification) {
+            if (trendClassification.includes('HIGH-GROWTH') || trendClassification.includes('Booming')) {
+                return '<span class="growth-indicator growth-high">HIGH GROWTH</span>';
+            } else if (trendClassification.includes('MODERATE-GROWTH') || trendClassification.includes('Growing')) {
+                return '<span class="growth-indicator growth-moderate">MODERATE GROWTH</span>';
+            } else if (trendClassification.includes('LOW-GROWTH') || trendClassification.includes('Slow Growth')) {
+                return '<span class="growth-indicator growth-low">LOW GROWTH</span>';
+            } else if (trendClassification.includes('DECLINING') || trendClassification.includes('Decreasing')) {
+                return '<span class="growth-indicator growth-declining">DECLINING</span>';
+            }
+            return '';
+        }
+        
+        // Get recommendation class for styling
+        function getRecommendationClass(recommendation) {
+            if (recommendation.includes('HIGHLY RECOMMENDED')) {
+                return 'highly';
+            } else if (recommendation.includes('RECOMMENDED')) {
+                return 'recommended';
+            } else if (recommendation.includes('CAUTIOUSLY RECOMMENDED')) {
+                return 'caution';
+            } else if (recommendation.includes('NEUTRAL')) {
+                return 'neutral';
+            } else if (recommendation.includes('NOT RECOMMENDED')) {
+                return 'not';
+            }
+            return 'neutral';
+        }
+        
+        // Show message
+        function showMessage(element, message, type) {
+            element.textContent = message;
+            element.classList.remove('hidden', 'status-success', 'status-error', 'status-info');
+            
+            switch(type) {
+                case 'success':
+                    element.classList.add('status-success');
+                    break;
+                case 'error':
+                    element.classList.add('status-error');
+                    break;
+                case 'info':
+                    element.classList.add('status-info');
+                    break;
+            }
+            
+            element.classList.remove('hidden');
+        }
+        
+        // Periodically check system status
+        setInterval(checkSystemStatus, 5000);
+    </script>
+</body>
+</html>
