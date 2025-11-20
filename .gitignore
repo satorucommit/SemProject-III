@@ -1,0 +1,33 @@
+# Python virtual environments
+nasa_patent_env/
+venv/
+env/
+/.venv/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.tox/
+.coverage
+
+# IDE/editor folders
+.vscode/
+.idea/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Ignore local virtualenv site-packages
+**/site-packages/
