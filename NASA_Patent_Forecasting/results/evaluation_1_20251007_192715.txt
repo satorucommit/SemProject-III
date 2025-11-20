@@ -1,0 +1,8 @@
+NASA Patent Forecasting - Evaluation Result
+Generated: 2025-10-07 19:27:15
+Evaluation #1
+================================================================================
+
+Patent Idea: solar panel efficiency gadget by us
+
+Error: No forecast available for Topic_0. Cannot evaluate trend.
